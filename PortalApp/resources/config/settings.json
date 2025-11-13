@@ -10,7 +10,7 @@
     "collectionName": "Collection1",
     "defInitialView": "grid",
     "defMapType": "roadmap",
-    "backgroundURL": null,
+    "backgroundURL": "resources/images/specify_webportal_background.png",
     "bannerURL": null,
     "bannerTitle": "Specify Web Portal",
     "bannerHeight": 120,
@@ -24,5 +24,6 @@
     "bottomHeight": null,
     "bottomMarginLeft": null,
     "bottomMarginRight": null,
-    "bottomWidth": null
+    "bottomWidth": null,
+    "displayImgCaption": false
 }]

@@ -245,12 +245,9 @@ Ext.define('SpWebPortal.controller.Settings', {
 	    var idx = dataIdx.indexOf(fld.get('solrname'));
 	    if (idx != -1) {
 		var gc = gridConfig[idx];
-		gc['advancedsearch'] = fld.get('advancedsearch');
-		gc['displaycolidx'] = fld.get('displaycolidx');
-		gc['displaywidth'] =  fld.get('width');
-		gc['width'] =  fld.get('width');
-		gc['hiddenbydefault'] = fld.get('hiddenbydefault');
-		gc['linkify'] = fld.get('linkify');
+		fld.set('displaycolidx', gc.index);
+		fld.set('displaywidth', gc.width);
+		fld.set('hiddenbydefault', gc.hidden);
 		//console.info(fld);
 	    }
 	}		 

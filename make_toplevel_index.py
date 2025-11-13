@@ -47,7 +47,7 @@ for elem in collections.findall('./*'):
     collections.remove(elem)
 
 for settings_file in settings_files:
-    with open(settings_file) as f:
+    with open(settings_file, encoding="utf-8") as f:
         settings = json.load(f)
 
     core_dir = splitall(settings_file)[2]
@@ -56,7 +56,6 @@ for settings_file in settings_files:
     li = ElementTree.SubElement(collections, 'li')
     a = ElementTree.SubElement(li, 'a')
     a.set('href', core_dir)
-    img = ElementTree.SubElement(a, 'img')
-    img.set('src', core_dir + '/resources/images/custom/custom-banner.svg')
+    a.text = core_name
 
-skel.write(sys.stdout)
+skel.write(sys.stdout.buffer, encoding="utf-8", xml_declaration=True)

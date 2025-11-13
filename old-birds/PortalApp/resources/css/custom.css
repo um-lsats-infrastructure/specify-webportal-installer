@@ -1,0 +1,38 @@
+/* U-M Header */
+#page {
+    background: url('../images/custom/custom-combined-repeated.png') 0px -236px repeat-x #00274c;
+    padding: 20px;
+    margin: unset;
+}
+
+/* U-M Header: Logo */
+#custom-header-logo {
+    max-width: 100%;
+    max-height: 50px;
+    vertical-align: middle;
+}
+
+/* U-M Header: Responsive Design: Wide */
+@media screen and (max-width: 1199px) {
+  #custom-header-logo {
+    border: none;
+    max-width: 100%;
+    max-height: 35px;
+  }
+}
+
+/* U-M Header: Responsive Design: Narrow */
+@media screen and (max-width: 767px) {
+  #custom-header-logo {
+    text-align: center;
+  }
+  .header-wrap .header-logo img {
+    max-width: 100%;
+    max-height: 35px;
+  }
+}
+
+/* Background Image */
+#spwpmainbackground-body > table > tbody > tr > td > img {
+  height:  600px; /* Force height because container height has off-screen bounds and the image is scaled too large otherwise. */
+}

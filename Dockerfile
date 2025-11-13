@@ -1,72 +1,76 @@
 # Build it like this:
 # docker build --tag webportal-service:improve-build .
 
-# Run it like this:
-# docker run -p 80:80 -v /absolute/location/of/your/export.zip:/home/specify/webportal-installer/specify_exports/export.zip webportal-service:improve-build
-# docker run -p 80:8080 webportal-service:improve-build
+# Run it like this: (Changed second port to 8080, as was done in old custom OpenShift version)
+# docker run -p 80:8080 -v /absolute/location/of/your/export.zip:/home/specify/webportal-installer/specify_exports/export.zip webportal-service:improve-build
 
-FROM ubuntu:18.04
+FROM ubuntu:24.04
 
 LABEL maintainer="Specify Collections Consortium <github.com/specify>"
 
-# Get Ubuntu packages
+# Install system packages
 RUN apt-get update && apt-get -y install \
-    nginx \
-    unzip \
-    curl \
-    wget \
-    python \
-    python-lxml \
-    make \
-    lsof \
-    vim \
-    default-jre
+        nginx \
+        unzip \
+        curl \
+        wget \
+        python3 \
+        python3-lxml \
+        make \
+        lsof \
+        openjdk-17-jre-headless \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Clean Up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Create 'specify' group and user if they don't already exist
+## Added group GID and user UID 999, as was done in old custom OpenShift version.
+RUN groupadd -g 999 specify || true \
+ && useradd -r -u 999 -g specify specify || true
 
-RUN groupadd -g 999 specify && \
-    useradd -r -u 999 -g specify specify
+# Create application directory and set ownership
+RUN mkdir -p /home/specify/webportal-installer \
+    && chown specify:specify -R /home/specify
 
-RUN addgroup specify root
-
-RUN mkdir -p /home/specify/webportal-installer && chown specify.specify -R /home/specify
-
+# Copy application code as the unprivileged 'specify' user
+## Changed exposed port to 8081 (As was done in old custom OpenShift version.)
 USER specify
-
-# Get Web Portal
 COPY --chown=specify:specify . /home/specify/webportal-installer
 WORKDIR /home/specify/webportal-installer
-
 EXPOSE 8081
 
+# Switch back to root for system configuration
 USER root
 
-# Configure nginx to proxy the Solr requests and serve the static files by copying the provided webportal-nginx.conf to /etc/nginx/sites-available/
-RUN install -o root -g root -m644 ./webportal-nginx.conf /etc/nginx/sites-available/
-
-# Disable the default nginx site and enable the portal site
+# Configure nginx
+COPY webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
 RUN rm /etc/nginx/sites-enabled/default \
     && ln -s /etc/nginx/sites-available/webportal-nginx.conf /etc/nginx/sites-enabled/ \
     && service nginx stop
 
-RUN ln -sf /dev/stderr /var/log/nginx/error.log && ln -sf /dev/stdout /var/log/nginx/access.log
+# Redirect nginx logs to Docker stdout/stderr
+RUN ln -sf /dev/stderr /var/log/nginx/error.log \
+    && ln -sf /dev/stdout /var/log/nginx/access.log
 
-# comment user directive as master process is run as user in OpenShift anyhow
+## (Added from old custom OpenShift version) comment user directive as master process is run as user in OpenShift anyhow
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 
-# Build the Solr app
-RUN make clean-all && make build-all
+# Default command:
+# 1. Clean & build your Solr-based portal
+# 2. Start Solr and wait 20s
+# 3. Import CSV into Solr
+# 4. Launch nginx in foreground
+CMD ["sh","-c", "\
+    make clean-all && \
+    make build-all && \
+    ./build/bin/solr start -force && \
+    sleep 20 && \
+    make load-data || true && \
+    nginx -g 'daemon off;' \
+"]
 
+## (Added from old custom OpenShift version)
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/run /var/log/nginx /var/lib/nginx
-
-# Run Solr in foreground
-# Wait for Solr to load
-# Import data from the .zip file
-RUN ./build/bin/solr start -force \
-    && sleep 20 \
-    && make load-data
 
 COPY docker-boot.sh /boot.sh
 RUN chmod g+u /boot.sh

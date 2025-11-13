@@ -17,6 +17,12 @@ University of Kansas
 Lawrence, KS 66045 USA
 ```
 
+## Configuration Instructions
+
+Instructions on customizing the Web Portal configuration are available on the Specify Communtiy Forum:
+
+[Web Portal Configuration Instructions](https://discourse.specifysoftware.org/t/web-portal-configuration-instructions/1144)
+
 ## Developer Instructions
 
 After completing these instructions you will be able to run Specify
@@ -50,6 +56,9 @@ web portal.
    user account with the name `specify`. If a different account is
    used, the directory paths in these instructions will need to be
    updated accordingly.
+
+   You will also need to update the `webportal-solr.service` file to use
+   the correct user and group.
 
 1. Clone the Web Portal 2.0 repository using git:
 
