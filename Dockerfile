@@ -1,10 +1,10 @@
 # Build it like this:
 ## docker build --tag webportal-service:improve-build .
-# docker build --tag webportal-service:new-birds .
+# docker build --tag webportal-service:new-fish .
 
 # Run it like this: (Changed second port to 8080, as was done in old custom OpenShift version)
 ## docker run -p 80:8080 -v /absolute/location/of/your/export.zip:/home/specify/webportal-installer/specify_exports/export.zip webportal-service:improve-build
-# docker run -d --name new-birds -p 80:8080 webportal-service:new-birds
+# docker run -d --name new-fish -p 80:8080 webportal-service:new-fish
 
 FROM ubuntu:24.04
 
