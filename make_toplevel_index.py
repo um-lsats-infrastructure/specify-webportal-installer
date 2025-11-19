@@ -56,6 +56,9 @@ for settings_file in settings_files:
     li = ElementTree.SubElement(collections, 'li')
     a = ElementTree.SubElement(li, 'a')
     a.set('href', core_dir)
-    a.text = core_name
+#    a.text = core_name
+## Added the following two lines for the starting page image, as done in the old version
+    img = ElementTree.SubElement(a, 'img')
+    img.set('src', core_dir + '/resources/images/custom/custom-banner.svg')
 
 skel.write(sys.stdout.buffer, encoding="utf-8", xml_declaration=True)

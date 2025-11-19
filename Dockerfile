@@ -1,8 +1,10 @@
 # Build it like this:
-# docker build --tag webportal-service:improve-build .
+## docker build --tag webportal-service:improve-build .
+# docker build --tag webportal-service:new-birds .
 
 # Run it like this: (Changed second port to 8080, as was done in old custom OpenShift version)
-# docker run -p 80:8080 -v /absolute/location/of/your/export.zip:/home/specify/webportal-installer/specify_exports/export.zip webportal-service:improve-build
+## docker run -p 80:8080 -v /absolute/location/of/your/export.zip:/home/specify/webportal-installer/specify_exports/export.zip webportal-service:improve-build
+# docker run -d --name new-birds -p 80:8080 webportal-service:new-birds
 
 FROM ubuntu:24.04
 
@@ -18,6 +20,7 @@ RUN apt-get update && apt-get -y install \
         python3-lxml \
         make \
         lsof \
+        vim\
         openjdk-17-jre-headless \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -41,7 +44,7 @@ EXPOSE 8081
 # Switch back to root for system configuration
 USER root
 
-# Configure nginx
+# Configure nginx (commented out COPY since done above)
 COPY webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
 RUN rm /etc/nginx/sites-enabled/default \
     && ln -s /etc/nginx/sites-available/webportal-nginx.conf /etc/nginx/sites-enabled/ \
@@ -50,9 +53,6 @@ RUN rm /etc/nginx/sites-enabled/default \
 # Redirect nginx logs to Docker stdout/stderr
 RUN ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/nginx/access.log
-
-## (Added from old custom OpenShift version) comment user directive as master process is run as user in OpenShift anyhow
-RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 
 # Default command:
 # 1. Clean & build your Solr-based portal
@@ -68,19 +68,3 @@ CMD ["sh","-c", "\
     nginx -g 'daemon off;' \
 "]
 
-## (Added from old custom OpenShift version)
-# support running as arbitrary user which belogs to the root group
-RUN chmod g+rwx /var/run /var/log/nginx /var/lib/nginx
-
-COPY docker-boot.sh /boot.sh
-RUN chmod g+u /boot.sh
-
-RUN chmod -R g+u /home/specify/webportal-installer/build
-#RUN ./build/bin/solr restart
-
-RUN touch /home/specify/test-image.jpg
-RUN chmod 777 /home/specify/test-image.jpg
-RUN chmod 777 /home/specify
-RUN chmod -R 777 /home/specify/webportal-installer
-
-ENTRYPOINT ["/boot.sh"]
