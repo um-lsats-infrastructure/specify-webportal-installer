@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+echo "---> Installing new content ..."
+mv /tmp/src/* ./
+
+echo "---> Loading new content ..."
+make load-data || true
+
+# Fix source directory permissions
+fix-permissions ./

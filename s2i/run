@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "---> Starting SOLR ..."
+./build/bin/solr start -force
+echo "---> Loading new content ..."
+make load-data || true
+echo "---> Starting nginx ..."
+nginx -g 'daemon off;

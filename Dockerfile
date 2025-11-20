@@ -10,6 +10,23 @@ FROM public.ecr.aws/ubuntu/ubuntu:24.04
 
 LABEL maintainer="Specify Collections Consortium <github.com/specify>"
 
+COPY fix-permissions /usr/bin/
+COPY cgroup-limits /usr/bin/
+
+RUN    chmod +x /usr/bin/fix-permissions \
+    && chmod +x /usr/bin/cgroup-limits
+
+RUN    mkdir -p /tmp/src && \
+       mkdir -p /usr/libexec/s2i
+
+COPY s2i/ /usr/libexec/s2i/
+
+RUN    chown -R 1001:0 /tmp/src \
+    && chmod +rx /usr/libexec/s2i/assemble \
+    && chmod +rx /usr/libexec/s2i/run \
+    && chmod +rx /usr/libexec/s2i/usage
+
+
 # Install system packages
 RUN apt-get update && apt-get -y install \
         nginx \
@@ -25,25 +42,13 @@ RUN apt-get update && apt-get -y install \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Create 'specify' group and user if they don't already exist
-## Added group GID and user UID 999, as was done in old custom OpenShift version.
-RUN groupadd -g 999 specify || true \
- && useradd -r -u 999 -g specify specify || true
-
-# Create application directory and set ownership
-RUN mkdir -p /home/specify/webportal-installer \
-    && chown specify:specify -R /home/specify
-
 # Copy application code as the unprivileged 'specify' user
 ## Changed exposed port to 8081 (As was done in old custom OpenShift version.)
-USER specify
-COPY --chown=specify:specify . /home/specify/webportal-installer
+COPY --chown=1001:0 . /home/specify/webportal-installer
 WORKDIR /home/specify/webportal-installer
 EXPOSE 8081
 
-# Switch back to root for system configuration
-USER root
-
+## Should preobably plan to do config in a configMap and mount it to the container
 # Configure nginx (commented out COPY since done above)
 COPY webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
 RUN rm /etc/nginx/sites-enabled/default \
@@ -54,17 +59,9 @@ RUN rm /etc/nginx/sites-enabled/default \
 RUN ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/nginx/access.log
 
-# Default command:
-# 1. Clean & build your Solr-based portal
-# 2. Start Solr and wait 20s
-# 3. Import CSV into Solr
-# 4. Launch nginx in foreground
-CMD ["sh","-c", "\
-    make clean-all && \
-    make build-all && \
-    ./build/bin/solr start -force && \
-    sleep 20 && \
-    make load-data || true && \
-    nginx -g 'daemon off;' \
-"]
+USER 1001
 
+RUN   make clean-all && \
+      make build-all
+
+CMD ["/usr/libexec/s2i/usage"]
