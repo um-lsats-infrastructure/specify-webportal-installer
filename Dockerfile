@@ -6,7 +6,7 @@
 ## docker run -p 80:8080 -v /absolute/location/of/your/export.zip:/home/specify/webportal-installer/specify_exports/export.zip webportal-service:improve-build
 # docker run -d --name new-birds -p 80:8080 webportal-service:new-birds
 
-FROM ubuntu:24.04
+FROM public.ecr.aws/ubuntu/ubuntu:24.04
 
 LABEL maintainer="Specify Collections Consortium <github.com/specify>"
 
