@@ -1,8 +1,0 @@
-/solr-*
-/unpacked-war/
-/build/
-
-/.lastupdate
-/example.crontab
-
-.DS_Store
