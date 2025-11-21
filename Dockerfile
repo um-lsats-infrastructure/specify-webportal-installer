@@ -43,7 +43,8 @@ RUN apt-get update && apt-get -y install \
     && rm -rf /var/lib/apt/lists/*
 
 RUN chown -R 1001:0 /var/lib/nginx && \
-    chmod 775 /var/lib/nginx
+    chmod 775 /var/lib/nginx && \
+    chmod 775 /run
 
 # Copy application code as the unprivileged 'specify' user
 ## Changed exposed port to 8081 (As was done in old custom OpenShift version.)
