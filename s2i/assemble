@@ -7,6 +7,11 @@ if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
      cp -f /tmp/src/nginx/webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
      chmod 664 /etc/nginx/sites-available/webportal-nginx.conf
 fi
+if [ -d "/tmp/src/nginx/custom_settings" ]; then
+     echo "---> Applying custom_settings ..."
+     rsync -aq /tmp/src/nginx/custom_settings ./custom_settings/ --ignore-existing
+     make build-html
+fi
 
 # Fix source directory permissions
 fix-permissions ./

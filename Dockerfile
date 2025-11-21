@@ -50,7 +50,7 @@ RUN chown -R 1001:0 /var/lib/nginx && \
 ## Changed exposed port to 8081 (As was done in old custom OpenShift version.)
 COPY --chown=1001:0 . /home/specify/webportal-installer
 WORKDIR /home/specify/webportal-installer
-EXPOSE 8081
+EXPOSE 8080
 
 ## Should preobably plan to do config in a configMap and mount it to the container
 # Configure nginx (commented out COPY since done above)
