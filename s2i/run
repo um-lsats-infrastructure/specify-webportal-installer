@@ -5,4 +5,4 @@ echo "---> Starting SOLR ..."
 echo "---> Loading new content ..."
 make load-data || true
 echo "---> Starting nginx ..."
-nginx -g 'daemon off;
+nginx -g 'daemon off';
