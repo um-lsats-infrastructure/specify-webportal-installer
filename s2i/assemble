@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "---> Installing new content ..."
-rsync -aq /tmp/src/specify_exports ./specify_exports/ --ignore-existing
+rsync -aq /tmp/src/specify_exports/ ./specify_exports/ --ignore-existing
 if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
      echo "---> Applying custom Nginx config ..."
      cp -f /tmp/src/nginx/webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
@@ -9,7 +9,7 @@ if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
 fi
 if [ -d "/tmp/src/custom_settings" ]; then
      echo "---> Applying custom_settings ..."
-     rsync -aq /tmp/src/custom_settings ./custom_settings/ --ignore-existing
+     rsync -aq /tmp/src/custom_settings/ ./custom_settings/ --ignore-existing
      make build-html
 fi
 
