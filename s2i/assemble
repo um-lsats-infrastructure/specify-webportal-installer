@@ -1,11 +1,12 @@
 #!/bin/bash
 
-
 echo "---> Installing new content ..."
-mv /tmp/src/* ./
-
-echo "---> Loading new content ..."
-make load-data || true
+rsync -aq /tmp/src/specify_exports ./specify_exports/ --ignore-existing
+if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
+     echo "---> Applying customg Nginx config ..."
+     cp -f /tmp/src/nginx/webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
+     chmod 664 /etc/nginx/sites-available/webportal-nginx.conf
+fi
 
 # Fix source directory permissions
 fix-permissions ./
