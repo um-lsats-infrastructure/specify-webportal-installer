@@ -3,7 +3,7 @@
 echo "---> Installing new content ..."
 rsync -aq /tmp/src/specify_exports ./specify_exports/ --ignore-existing
 if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
-     echo "---> Applying customg Nginx config ..."
+     echo "---> Applying custom Nginx config ..."
      cp -f /tmp/src/nginx/webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
      chmod 664 /etc/nginx/sites-available/webportal-nginx.conf
 fi

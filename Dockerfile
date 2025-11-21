@@ -38,7 +38,8 @@ RUN apt-get update && apt-get -y install \
         make \
         lsof \
         vim\
-        openjdk-17-jre-headless \
+        rsync \
+        openjdk-21-jre-headless \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
