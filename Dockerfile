@@ -24,8 +24,7 @@ COPY s2i/ /usr/libexec/s2i/
 RUN    chown -R 1001:0 /tmp/src \
     && chmod +rx /usr/libexec/s2i/assemble \
     && chmod +rx /usr/libexec/s2i/run \
-    && chmod +rx /usr/libexec/s2i/usage \
-    && chown -R 1001:0 /var/lib/nginx
+    && chmod +rx /usr/libexec/s2i/usage
 
 
 # Install system packages
@@ -42,6 +41,8 @@ RUN apt-get update && apt-get -y install \
         openjdk-17-jre-headless \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN chown -R 1001:0 /var/lib/nginx
 
 # Copy application code as the unprivileged 'specify' user
 ## Changed exposed port to 8081 (As was done in old custom OpenShift version.)
