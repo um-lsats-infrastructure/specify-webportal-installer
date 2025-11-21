@@ -24,7 +24,8 @@ COPY s2i/ /usr/libexec/s2i/
 RUN    chown -R 1001:0 /tmp/src \
     && chmod +rx /usr/libexec/s2i/assemble \
     && chmod +rx /usr/libexec/s2i/run \
-    && chmod +rx /usr/libexec/s2i/usage
+    && chmod +rx /usr/libexec/s2i/usage \
+    && chown -R 1001:0 /var/lib/nginx
 
 
 # Install system packages
