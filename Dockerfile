@@ -60,6 +60,9 @@ RUN rm /etc/nginx/sites-enabled/default \
     && ln -s /etc/nginx/sites-available/webportal-nginx.conf /etc/nginx/sites-enabled/ \
     && service nginx stop
 
+RUN chown 1001:0 /etc/nginx/sites-available/webportal-nginx.conf && \
+    chmod 664 /etc/nginx/sites-available/webportal-nginx.conf
+
 # Redirect nginx logs to Docker stdout/stderr
 RUN ln -sf /dev/stderr /var/log/nginx/error.log \
     && ln -sf /dev/stdout /var/log/nginx/access.log
