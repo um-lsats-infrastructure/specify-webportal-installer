@@ -4,7 +4,7 @@ echo "---> Extracting Catalogs ..."
 for i in specify_exports/*.zip
 do
   echo "--> Extracting $i ..."
-  unzip -DD -qq -o -d build/col/$* $i
+  unzip -DD -qq -o -d build/col/catalog $i
 done
 echo "---> Starting SOLR ..."
 ./build/bin/solr start -force
