@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "---> Extracting Catalogs ..."
-for i in specify_exports/%*.zip
+for i in specify_exports/*.zip
 do
   echo "--> Extracting $i ..."
   unzip -DD -qq -o -d build/col/$* $i
