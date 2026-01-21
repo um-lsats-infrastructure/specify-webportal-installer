@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 echo "---> Installing new content ..."
 rsync -aq /tmp/src/specify_exports/ ./specify_exports/
 if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
@@ -7,6 +8,21 @@ if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
      cp -f /tmp/src/nginx/webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
      chmod 664 /etc/nginx/sites-available/webportal-nginx.conf
 fi
+
+echo "---> Extracting Catalogs ..."
+for i in specify_exports/*.zip
+do
+  echo "--> Extracting $i ..."
+  unzip -DD -qq -o -d build/col/catalog $i
+done
+echo "---> Starting SOLR ..."
+./build/bin/solr start -force
+echo "---> Pausing for 20 seconds ..."
+sleep 20
+
+echo "---> Build SOLR Collections ..."
+make build-cores
+
 if [ -d "/tmp/src/PortalApp" ]; then
      echo "---> Applying PortalApp resources ..."
      rsync -aq /tmp/src/PortalApp/ ./PortalApp/
@@ -17,6 +33,9 @@ if [ -d "/tmp/src/custom_settings" ]; then
      rsync -aq /tmp/src/custom_settings/ ./custom_settings/
      make build-html
 fi
+
+make load-data || true
+
 
 # Fix source directory permissions
 fix-permissions ./
