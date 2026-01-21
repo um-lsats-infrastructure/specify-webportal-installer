@@ -9,13 +9,6 @@ if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
      chmod 664 /etc/nginx/sites-available/webportal-nginx.conf
 fi
 
-echo "---> Extracting Catalogs ..."
-for i in specify_exports/*.zip
-do
-  echo "--> Extracting $i ..."
-  unzip -DD -qq -o -d build/col/catalog $i
-done
-
 echo "---> Build SOLR Collections ..."
 make clean-all && \
     make build-all && \
