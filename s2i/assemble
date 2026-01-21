@@ -15,27 +15,13 @@ do
   echo "--> Extracting $i ..."
   unzip -DD -qq -o -d build/col/catalog $i
 done
-echo "---> Starting SOLR ..."
-./build/bin/solr start -force
-echo "---> Pausing for 20 seconds ..."
-sleep 20
 
 echo "---> Build SOLR Collections ..."
-make build-cores
-
-if [ -d "/tmp/src/PortalApp" ]; then
-     echo "---> Applying PortalApp resources ..."
-     rsync -aq /tmp/src/PortalApp/ ./PortalApp/
-     make build-html
-fi
-if [ -d "/tmp/src/custom_settings" ]; then
-     echo "---> Applying custom_settings ..."
-     rsync -aq /tmp/src/custom_settings/ ./custom_settings/
-     make build-html
-fi
-
-make load-data || true
-
+make clean-all && \
+    make build-all && \
+    ./build/bin/solr start -force && \
+    sleep 20 && \
+    make load-data || true
 
 # Fix source directory permissions
 fix-permissions ./
