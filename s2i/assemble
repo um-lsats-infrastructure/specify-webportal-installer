@@ -2,7 +2,7 @@
 
 
 echo "---> Installing new content ..."
-rsync -aq /tmp/src/specify_exports/ ./specify_exports/
+rsync -avP /tmp/src/ ./ --no-times --no-perms
 if [ -f "/tmp/src/nginx/webportal-nginx.conf" ]; then
      echo "---> Applying custom Nginx config ..."
      cp -f /tmp/src/nginx/webportal-nginx.conf /etc/nginx/sites-available/webportal-nginx.conf
