@@ -14,7 +14,7 @@ make clean-all && \
     make build-all && \
     ./build/bin/solr start -force && \
     sleep 20 && \
-    make load-data || true
+    make force-load-data || true
 
 # Fix source directory permissions
 fix-permissions ./
