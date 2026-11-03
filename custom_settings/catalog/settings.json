@@ -11,7 +11,7 @@
     "bottomWidth": null,
     "defInitialView": "grid",
     "defMapType": "roadmap",
-    "imageBaseUrl": null,
+    "imageBaseUrl": "https://ummz-fishes-specify-portal.apps.gnosis.lsa.umich.edu",
     "imagePreviewSize": 200,
     "imageViewSize": 600,
     "maxSolrPageSize": 5000,
