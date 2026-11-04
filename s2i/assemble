@@ -17,7 +17,8 @@ make clean-all && \
     make force-load-data || true
 
 echo "---> Patch In Custom Settings (Workaround) ..."
-
+jq --arg newVal "$SITE_URL" '.imageBaseUrl = $newVal' build/html/catalog/resources/config/settings.json > /tmp/settings.json
+mv /tmp/settings.json build/html/catalog/resources/config/settings.json
 
 # Fix source directory permissions
 fix-permissions ./

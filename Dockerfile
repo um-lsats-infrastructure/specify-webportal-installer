@@ -10,6 +10,8 @@ FROM public.ecr.aws/ubuntu/ubuntu:24.04
 
 LABEL maintainer="Specify Collections Consortium <github.com/specify>"
 
+ENV SITE_URL="https://ummz-birds-specify-portal.apps.gnosis.lsa.umich.edu"
+
 COPY fix-permissions /usr/bin/
 COPY cgroup-limits /usr/bin/
 
@@ -40,6 +42,7 @@ RUN apt-get update && apt-get -y install \
         vim\
         rsync \
         openjdk-21-jre-headless \
+        jq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
