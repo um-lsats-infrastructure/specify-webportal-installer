@@ -17,10 +17,7 @@ make clean-all && \
     make force-load-data || true
 
 echo "---> Patch In Custom Settings (Workaround) ..."
-python3 patch_settings_json.py \
-        build/html/catalog/resources/config/settings.json \
-        custom_settings/catalog/settings.json \
-        > build/html/catalog/resources/config/settings.json
+
 
 # Fix source directory permissions
 fix-permissions ./
